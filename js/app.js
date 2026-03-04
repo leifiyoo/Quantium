@@ -107,10 +107,22 @@ class QuantiumApp {
   _initCanvas() {
     const resize = () => {
       const cc = this.canvasContainer;
-      this.canvas.width = cc.clientWidth;
-      this.canvas.height = cc.clientHeight;
-      this.overlayCanvas.width = cc.clientWidth;
-      this.overlayCanvas.height = cc.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const w = cc.clientWidth;
+      const h = cc.clientHeight;
+      this.canvas.width = w * dpr;
+      this.canvas.height = h * dpr;
+      this.canvas.style.width = w + 'px';
+      this.canvas.style.height = h + 'px';
+      this.overlayCanvas.width = w * dpr;
+      this.overlayCanvas.height = h * dpr;
+      this.overlayCanvas.style.width = w + 'px';
+      this.overlayCanvas.style.height = h + 'px';
+      this._dpr = dpr;
+      if (dpr !== 1) {
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.overlayCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
       this.render();
     };
     new ResizeObserver(resize).observe(this.canvasContainer);
@@ -267,7 +279,8 @@ class QuantiumApp {
 
   renderOverlay() {
     if (!this.overlayCtx) return;
-    this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+    const dpr = this._dpr || 1;
+    this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width / dpr, this.overlayCanvas.height / dpr);
     // Draw selection marquee
     if (this.selection.active) {
       this._drawSelectionMarquee();
@@ -329,7 +342,8 @@ class QuantiumApp {
     oc.strokeStyle = 'rgba(128,128,255,0.3)';
     oc.lineWidth = 0.5;
     const { x: ox, y: oy } = this.canvasOffset;
-    const W = oc.canvas.width, H = oc.canvas.height;
+    const dpr = this._dpr || 1;
+    const W = oc.canvas.width / dpr, H = oc.canvas.height / dpr;
     for (let x = ox % spacing; x < W; x += spacing) {
       oc.beginPath(); oc.moveTo(x, 0); oc.lineTo(x, H); oc.stroke();
     }
