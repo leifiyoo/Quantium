@@ -87,7 +87,7 @@ class KeyboardManager {
     if (ctrl && e.key === '-') { e.preventDefault(); this.app.setZoom(this.app.scale/1.25); return; }
     if (ctrl && e.key === '0') { e.preventDefault(); this.app.fitToScreen(); return; }
     if (ctrl && alt && e.key === '0') { e.preventDefault(); this.app.setZoom(1); return; }
-    if (shift && e.key.toLowerCase() === 'f') { e.preventDefault(); this.app.toggleFullscreen(); return; }
+    if (!ctrl && !alt && e.key.toLowerCase() === 'f') { e.preventDefault(); this.app.toggleFullscreen(); return; }
     if (ctrl && e.key === 'r') { e.preventDefault(); this.app.ui.toggleRulers(); return; }
     if (ctrl && e.key === "'") { e.preventDefault(); this.app.ui.toggleGrid(); return; }
     if (ctrl && e.key === ';') { e.preventDefault(); this.app.ui.toggleGuides(); return; }
