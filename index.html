@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantium – Photo Editor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🎨</text></svg>">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Menu Bar ─────────────────────────────────────────────────────── -->
+  <nav id="menu-bar">
+    <div class="menu-item" tabindex="0">
+      <span>🎨 <strong>Quantium</strong></span>
+    </div>
+
+    <!-- File -->
+    <div class="menu-item" tabindex="0">
+      File
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-new"><span>New…</span><span class="shortcut">Ctrl+N</span></div>
+        <div class="menu-row" id="menu-open"><span>Open…</span><span class="shortcut">Ctrl+O</span></div>
+        <div class="menu-row menu-sub" id="menu-open-recent">
+          <span>Open Recent</span>
+          <div class="submenu">
+            <div class="menu-row"><span>No recent files</span></div>
+          </div>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-save"><span>Save</span><span class="shortcut">Ctrl+S</span></div>
+        <div class="menu-row" id="menu-save-as"><span>Save As…</span><span class="shortcut">Ctrl+Shift+S</span></div>
+        <div class="menu-row menu-sub">
+          <span>Export As</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-export-png"><span>PNG…</span></div>
+            <div class="menu-row" id="menu-export-jpg"><span>JPEG…</span></div>
+            <div class="menu-row" id="menu-export-webp"><span>WebP…</span></div>
+          </div>
+        </div>
+        <div class="menu-row" id="menu-revert"><span>Revert</span><span class="shortcut">F12</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-print"><span>Print…</span><span class="shortcut">Ctrl+P</span></div>
+      </div>
+    </div>
+
+    <!-- Edit -->
+    <div class="menu-item" tabindex="0">
+      Edit
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-undo"><span>Undo</span><span class="shortcut">Ctrl+Z</span></div>
+        <div class="menu-row" id="menu-redo"><span>Redo</span><span class="shortcut">Ctrl+Shift+Z</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-cut"><span>Cut</span><span class="shortcut">Ctrl+X</span></div>
+        <div class="menu-row" id="menu-copy"><span>Copy</span><span class="shortcut">Ctrl+C</span></div>
+        <div class="menu-row" id="menu-paste"><span>Paste</span><span class="shortcut">Ctrl+V</span></div>
+        <div class="menu-row" id="menu-paste-place"><span>Paste in Place</span><span class="shortcut">Ctrl+Shift+V</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-fill"><span>Fill…</span><span class="shortcut">Shift+F5</span></div>
+        <div class="menu-row" id="menu-stroke"><span>Stroke…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-free-transform"><span>Free Transform</span><span class="shortcut">Ctrl+T</span></div>
+        <div class="menu-row menu-sub">
+          <span>Transform</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-rotate-180"><span>Rotate 180°</span></div>
+            <div class="menu-row" id="menu-rotate-90cw"><span>Rotate 90° Clockwise</span></div>
+            <div class="menu-row" id="menu-rotate-90ccw"><span>Rotate 90° Counter-Clockwise</span></div>
+            <div class="menu-row" id="menu-rotate-arbitrary"><span>Rotate…</span></div>
+            <div class="menu-sep"></div>
+            <div class="menu-row" id="menu-flip-h"><span>Flip Horizontal</span></div>
+            <div class="menu-row" id="menu-flip-v"><span>Flip Vertical</span></div>
+          </div>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-preferences"><span>Preferences…</span><span class="shortcut">Ctrl+K</span></div>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="menu-item" tabindex="0">
+      Image
+      <div class="menu-dropdown">
+        <div class="menu-row menu-sub">
+          <span>Mode</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-mode-bitmap"><span>Bitmap</span></div>
+            <div class="menu-row" id="menu-mode-grayscale"><span>Grayscale</span></div>
+            <div class="menu-row" id="menu-mode-indexed"><span>Indexed Color</span></div>
+            <div class="menu-row" id="menu-mode-rgb"><span>✔ RGB Color</span></div>
+            <div class="menu-row" id="menu-mode-cmyk"><span>CMYK Color</span></div>
+            <div class="menu-row" id="menu-mode-lab"><span>Lab Color</span></div>
+            <div class="menu-sep"></div>
+            <div class="menu-row" id="menu-mode-8bit"><span>✔ 8 Bits/Channel</span></div>
+            <div class="menu-row" id="menu-mode-16bit"><span>16 Bits/Channel</span></div>
+            <div class="menu-row" id="menu-mode-32bit"><span>32 Bits/Channel</span></div>
+          </div>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-auto-tone"><span>Auto Tone</span><span class="shortcut">Ctrl+Shift+L</span></div>
+        <div class="menu-row" id="menu-auto-contrast"><span>Auto Contrast</span><span class="shortcut">Ctrl+Alt+Shift+L</span></div>
+        <div class="menu-row" id="menu-auto-color"><span>Auto Color</span><span class="shortcut">Ctrl+Shift+B</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-image-size"><span>Image Size…</span><span class="shortcut">Ctrl+Alt+I</span></div>
+        <div class="menu-row" id="menu-canvas-size"><span>Canvas Size…</span><span class="shortcut">Ctrl+Alt+C</span></div>
+        <div class="menu-row" id="menu-crop"><span>Crop</span></div>
+        <div class="menu-row" id="menu-trim"><span>Trim…</span></div>
+        <div class="menu-row" id="menu-reveal-all"><span>Reveal All</span></div>
+      </div>
+    </div>
+
+    <!-- Adjustments -->
+    <div class="menu-item" tabindex="0">
+      Adjustments
+      <div class="menu-dropdown" style="min-width:220px">
+        <div class="menu-row" id="menu-adj-brightness"><span>Brightness/Contrast…</span><span class="shortcut">Ctrl+B</span></div>
+        <div class="menu-row" id="menu-adj-levels"><span>Levels…</span><span class="shortcut">Ctrl+L</span></div>
+        <div class="menu-row" id="menu-adj-curves"><span>Curves…</span><span class="shortcut">Ctrl+M</span></div>
+        <div class="menu-row" id="menu-adj-exposure"><span>Exposure…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-adj-vibrance"><span>Vibrance…</span></div>
+        <div class="menu-row" id="menu-adj-hue-sat"><span>Hue/Saturation…</span><span class="shortcut">Ctrl+U</span></div>
+        <div class="menu-row" id="menu-adj-color-balance"><span>Color Balance…</span></div>
+        <div class="menu-row" id="menu-adj-bw"><span>Black & White…</span><span class="shortcut">Ctrl+Alt+Shift+B</span></div>
+        <div class="menu-row" id="menu-adj-photo-filter"><span>Photo Filter…</span></div>
+        <div class="menu-row" id="menu-adj-channel-mixer"><span>Channel Mixer…</span></div>
+        <div class="menu-row" id="menu-adj-gradient-map"><span>Gradient Map…</span></div>
+        <div class="menu-row" id="menu-adj-selective-color"><span>Selective Color…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-adj-shadows-highlights"><span>Shadows/Highlights…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-adj-invert"><span>Invert</span><span class="shortcut">Ctrl+I</span></div>
+        <div class="menu-row" id="menu-adj-posterize"><span>Posterize…</span></div>
+        <div class="menu-row" id="menu-adj-threshold"><span>Threshold…</span></div>
+        <div class="menu-row" id="menu-adj-equalize"><span>Equalize</span></div>
+        <div class="menu-row" id="menu-adj-desaturate"><span>Desaturate</span><span class="shortcut">Ctrl+Shift+U</span></div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="menu-item" tabindex="0">
+      Filter
+      <div class="menu-dropdown" style="min-width:200px">
+        <div class="menu-row" id="menu-filter-last"><span>Last Filter</span><span class="shortcut">Ctrl+F</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row menu-sub">
+          <span>Blur</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-gaussian"><span>Gaussian Blur…</span></div>
+            <div class="menu-row" id="menu-filter-box-blur"><span>Box Blur…</span></div>
+            <div class="menu-row" id="menu-filter-motion-blur"><span>Motion Blur…</span></div>
+            <div class="menu-row" id="menu-filter-radial-blur"><span>Radial Blur…</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Sharpen</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-sharpen"><span>Sharpen…</span></div>
+            <div class="menu-row" id="menu-filter-unsharp"><span>Unsharp Mask…</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Noise</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-noise"><span>Add Noise…</span></div>
+            <div class="menu-row" id="menu-filter-median"><span>Median…</span></div>
+            <div class="menu-row" id="menu-filter-despeckle"><span>Despeckle</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Distort</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-ripple"><span>Ripple…</span></div>
+            <div class="menu-row" id="menu-filter-twirl"><span>Twirl…</span></div>
+            <div class="menu-row" id="menu-filter-pinch"><span>Pinch…</span></div>
+            <div class="menu-row" id="menu-filter-spherize"><span>Spherize…</span></div>
+            <div class="menu-row" id="menu-filter-polar"><span>Polar Coordinates…</span></div>
+            <div class="menu-row" id="menu-filter-zigzag"><span>ZigZag…</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Stylize</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-find-edges"><span>Find Edges</span></div>
+            <div class="menu-row" id="menu-filter-emboss"><span>Emboss…</span></div>
+            <div class="menu-row" id="menu-filter-solarize"><span>Solarize…</span></div>
+            <div class="menu-row" id="menu-filter-invert"><span>Invert</span></div>
+            <div class="menu-row" id="menu-filter-diffuse-glow"><span>Diffuse Glow…</span></div>
+            <div class="menu-row" id="menu-filter-glowing-edges"><span>Glowing Edges</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Pixelate</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-pixelate"><span>Pixelate…</span></div>
+            <div class="menu-row" id="menu-filter-crystallize"><span>Crystallize…</span></div>
+            <div class="menu-row" id="menu-filter-halftone"><span>Color Halftone…</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Render</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-clouds"><span>Clouds</span></div>
+            <div class="menu-row" id="menu-filter-diff-clouds"><span>Difference Clouds</span></div>
+            <div class="menu-row" id="menu-filter-lens-flare"><span>Lens Flare…</span></div>
+          </div>
+        </div>
+        <div class="menu-row menu-sub">
+          <span>Other</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-filter-high-pass"><span>High Pass…</span></div>
+            <div class="menu-row" id="menu-filter-desaturate"><span>Desaturate</span></div>
+            <div class="menu-row" id="menu-filter-sepia"><span>Sepia…</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Select -->
+    <div class="menu-item" tabindex="0">
+      Select
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-select-all"><span>All</span><span class="shortcut">Ctrl+A</span></div>
+        <div class="menu-row" id="menu-deselect"><span>Deselect</span><span class="shortcut">Ctrl+D</span></div>
+        <div class="menu-row" id="menu-reselect"><span>Reselect</span><span class="shortcut">Ctrl+Shift+D</span></div>
+        <div class="menu-row" id="menu-invert-sel"><span>Invert</span><span class="shortcut">Ctrl+Shift+I</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-select-color-range"><span>Color Range…</span></div>
+        <div class="menu-row" id="menu-feather"><span>Feather…</span><span class="shortcut">Shift+F6</span></div>
+        <div class="menu-row menu-sub">
+          <span>Modify</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-modify-border"><span>Border…</span></div>
+            <div class="menu-row" id="menu-modify-smooth"><span>Smooth…</span></div>
+            <div class="menu-row" id="menu-modify-expand"><span>Expand…</span></div>
+            <div class="menu-row" id="menu-modify-contract"><span>Contract…</span></div>
+          </div>
+        </div>
+        <div class="menu-row" id="menu-grow"><span>Grow</span></div>
+        <div class="menu-row" id="menu-similar"><span>Similar</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-transform-sel"><span>Transform Selection</span></div>
+      </div>
+    </div>
+
+    <!-- Layer -->
+    <div class="menu-item" tabindex="0">
+      Layer
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-layer-new"><span>New Layer…</span><span class="shortcut">Ctrl+Shift+N</span></div>
+        <div class="menu-row" id="menu-layer-new-bg"><span>New Background Layer</span></div>
+        <div class="menu-row" id="menu-layer-duplicate"><span>Duplicate Layer</span><span class="shortcut">Ctrl+J</span></div>
+        <div class="menu-row" id="menu-layer-delete"><span>Delete Layer</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-layer-properties"><span>Layer Properties…</span></div>
+        <div class="menu-row" id="menu-layer-style"><span>Layer Style…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row menu-sub">
+          <span>Layer Mask</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-layer-mask-all"><span>Reveal All</span></div>
+          </div>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-layer-merge-down"><span>Merge Down</span><span class="shortcut">Ctrl+E</span></div>
+        <div class="menu-row" id="menu-layer-merge-visible"><span>Merge Visible</span><span class="shortcut">Ctrl+Shift+E</span></div>
+        <div class="menu-row" id="menu-layer-flatten"><span>Flatten Image</span></div>
+      </div>
+    </div>
+
+    <!-- View -->
+    <div class="menu-item" tabindex="0">
+      View
+      <div class="menu-dropdown">
+        <div class="menu-row menu-sub">
+          <span>Zoom</span>
+          <div class="submenu">
+            <div class="menu-row" id="menu-zoom-in"><span>Zoom In</span><span class="shortcut">Ctrl++</span></div>
+            <div class="menu-row" id="menu-zoom-out"><span>Zoom Out</span><span class="shortcut">Ctrl+-</span></div>
+            <div class="menu-row" id="menu-zoom-fit"><span>Fit Screen</span><span class="shortcut">Ctrl+0</span></div>
+            <div class="menu-row" id="menu-zoom-100"><span>Actual Pixels</span><span class="shortcut">Ctrl+Alt+0</span></div>
+            <div class="menu-row" id="menu-zoom-200"><span>200%</span></div>
+            <div class="menu-row" id="menu-zoom-50"><span>50%</span></div>
+            <div class="menu-row" id="menu-zoom-25"><span>25%</span></div>
+          </div>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-toggle-rulers"><span>Rulers</span><span class="shortcut">Ctrl+R</span></div>
+        <div class="menu-row" id="menu-toggle-grid"><span>Grid</span><span class="shortcut">Ctrl+'</span></div>
+        <div class="menu-row" id="menu-toggle-guides"><span>Guides</span><span class="shortcut">Ctrl+;</span></div>
+        <div class="menu-row" id="menu-toggle-extras"><span>Extras</span><span class="shortcut">Ctrl+H</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-toggle-panels"><span>Toggle Panels</span><span class="shortcut">Tab</span></div>
+        <div class="menu-row" id="menu-fullscreen"><span>Fullscreen</span><span class="shortcut">F</span></div>
+      </div>
+    </div>
+
+    <!-- Window -->
+    <div class="menu-item" tabindex="0">
+      Window
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-win-history"><span>History</span></div>
+        <div class="menu-row" id="menu-win-layers"><span>Layers</span></div>
+        <div class="menu-row" id="menu-win-properties"><span>Properties</span></div>
+        <div class="menu-row" id="menu-win-info"><span>Info</span></div>
+        <div class="menu-row" id="menu-win-navigator"><span>Navigator</span></div>
+        <div class="menu-row" id="menu-win-channels"><span>Channels</span></div>
+        <div class="menu-row" id="menu-win-paths"><span>Paths</span></div>
+        <div class="menu-row" id="menu-win-actions"><span>Actions</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-win-swatches"><span>Swatches</span></div>
+        <div class="menu-row" id="menu-win-brushes"><span>Brushes</span></div>
+        <div class="menu-row" id="menu-win-character"><span>Character</span></div>
+        <div class="menu-row" id="menu-win-paragraph"><span>Paragraph</span></div>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div class="menu-item" tabindex="0">
+      Help
+      <div class="menu-dropdown">
+        <div class="menu-row" id="menu-help-shortcuts"><span>Keyboard Shortcuts…</span></div>
+        <div class="menu-sep"></div>
+        <div class="menu-row" id="menu-help-about"><span>About Quantium…</span></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Options Bar ───────────────────────────────────────────────────── -->
+  <div id="options-bar">
+    <div id="options-bar-content" style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden"></div>
+  </div>
+
+  <!-- ── Work Area ─────────────────────────────────────────────────────── -->
+  <div id="work-area">
+
+    <!-- Toolbar -->
+    <div id="toolbar">
+      <!-- Selection tools -->
+      <button class="tool-btn" data-tool="move" title="Move (V)">✥</button>
+      <button class="tool-btn" data-tool="rect-select" title="Rectangular Marquee (M)">⬜</button>
+      <button class="tool-btn" data-tool="ellipse-select" title="Elliptical Marquee (M)">⭕</button>
+      <button class="tool-btn" data-tool="lasso" title="Lasso (L)">🔘</button>
+      <button class="tool-btn" data-tool="polygon-lasso" title="Polygonal Lasso (L)">⬡</button>
+      <button class="tool-btn" data-tool="magic-wand" title="Magic Wand (W)">🪄</button>
+      <div class="toolbar-sep"></div>
+      <!-- Crop & Slice -->
+      <button class="tool-btn" data-tool="crop" title="Crop (C)">⤢</button>
+      <button class="tool-btn" data-tool="slice" title="Slice">🔪</button>
+      <button class="tool-btn" data-tool="measure" title="Measure">📏</button>
+      <div class="toolbar-sep"></div>
+      <!-- Retouching -->
+      <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I)">💉</button>
+      <button class="tool-btn" data-tool="healing-brush" title="Healing Brush (J)">✚</button>
+      <button class="tool-btn" data-tool="clone-stamp" title="Clone Stamp (S)">🖄</button>
+      <button class="tool-btn" data-tool="smudge" title="Smudge">☁</button>
+      <div class="toolbar-sep"></div>
+      <!-- Painting -->
+      <button class="tool-btn" data-tool="brush" title="Brush (B)">🖌</button>
+      <button class="tool-btn" data-tool="pencil" title="Pencil (N)">✏️</button>
+      <button class="tool-btn" data-tool="eraser" title="Eraser (E)">🧹</button>
+      <button class="tool-btn" data-tool="fill" title="Paint Bucket (G)">🪣</button>
+      <button class="tool-btn" data-tool="gradient" title="Gradient (G)">⬛→⬜</button>
+      <div class="toolbar-sep"></div>
+      <!-- Toning -->
+      <button class="tool-btn" data-tool="blur-brush" title="Blur (R)">〰</button>
+      <button class="tool-btn" data-tool="sharpen-brush" title="Sharpen">🔺</button>
+      <button class="tool-btn" data-tool="dodge" title="Dodge (O)">☀</button>
+      <button class="tool-btn" data-tool="burn" title="Burn (O)">🌑</button>
+      <button class="tool-btn" data-tool="sponge" title="Sponge (O)">🫧</button>
+      <div class="toolbar-sep"></div>
+      <!-- Paths & Shapes -->
+      <button class="tool-btn" data-tool="pen" title="Pen (P)">🖊</button>
+      <button class="tool-btn" data-tool="text" title="Text (T)">T</button>
+      <button class="tool-btn" data-tool="shape-rect" title="Rectangle (U)">▬</button>
+      <button class="tool-btn" data-tool="shape-rounded-rect" title="Rounded Rectangle (U)">▢</button>
+      <button class="tool-btn" data-tool="shape-ellipse" title="Ellipse (U)">⬭</button>
+      <button class="tool-btn" data-tool="shape-triangle" title="Triangle (U)">△</button>
+      <button class="tool-btn" data-tool="shape-polygon" title="Polygon (U)">⬡</button>
+      <button class="tool-btn" data-tool="shape-star" title="Star">★</button>
+      <button class="tool-btn" data-tool="shape-line" title="Line (U)">╱</button>
+      <div class="toolbar-sep"></div>
+      <!-- Navigation -->
+      <button class="tool-btn" data-tool="transform" title="Free Transform (Ctrl+T)">⊡</button>
+      <button class="tool-btn" data-tool="hand" title="Hand (H)">🖐</button>
+      <button class="tool-btn" data-tool="zoom" title="Zoom (Z)">🔍</button>
+
+      <!-- Color swatches -->
+      <div class="toolbar-sep"></div>
+      <div class="color-swatch-wrapper">
+        <div id="bg-color-swatch" title="Background Color"></div>
+        <div id="fg-color-swatch" title="Foreground Color (click to change)"></div>
+        <button id="swap-colors" title="Swap Colors (X)">⇄</button>
+        <button id="reset-colors" title="Reset Colors (D)">↺</button>
+      </div>
+    </div>
+
+    <!-- Main View (canvas + rulers) -->
+    <div id="main-view">
+      <div id="canvas-wrapper">
+        <div id="canvas-container">
+          <canvas id="main-canvas"></canvas>
+          <canvas id="overlay-canvas"></canvas>
+          <!-- Welcome hint -->
+          <div id="welcome-hint">
+            <h1>🎨 Quantium</h1>
+            <p>Full-featured Photo Editor</p>
+            <p style="margin-top:12px;font-size:11px">Drag &amp; drop an image, or use <strong>File → New</strong> to create a document</p>
+            <p style="font-size:11px">Press <strong>Ctrl+N</strong> to start immediately</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panels -->
+    <div id="right-panels">
+
+      <!-- Color -->
+      <div class="panel" id="color-panel">
+        <div class="panel-header">
+          Color &amp; Swatches
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:9px;color:var(--text-dim)">FG</span>
+              <div id="cp-fg-preview" style="width:24px;height:24px;background:#000;border:1px solid #666;cursor:pointer" onclick="app.ui.showColorPickerDialog('fg')"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:9px;color:var(--text-dim)">BG</span>
+              <div id="cp-bg-preview" style="width:24px;height:24px;background:#fff;border:1px solid #666;cursor:pointer" onclick="app.ui.showColorPickerDialog('bg')"></div>
+            </div>
+            <input type="color" id="color-picker-native" value="#000000" style="flex:1;height:28px;border:1px solid #555;background:none;cursor:pointer;padding:0">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px;font-size:11px">
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="width:12px;color:var(--text-dim)">H</span>
+              <input type="range" id="cp-hue" min="0" max="360" value="0" style="flex:1;accent-color:var(--accent)">
+              <input type="number" id="cp-hue-n" min="0" max="360" value="0" style="width:40px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:1px 3px;font-size:10px">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="width:12px;color:var(--text-dim)">S</span>
+              <input type="range" id="cp-sat" min="0" max="100" value="100" style="flex:1;accent-color:var(--accent)">
+              <input type="number" id="cp-sat-n" min="0" max="100" value="100" style="width:40px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:1px 3px;font-size:10px">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="width:12px;color:var(--text-dim)">L</span>
+              <input type="range" id="cp-lum" min="0" max="100" value="0" style="flex:1;accent-color:var(--accent)">
+              <input type="number" id="cp-lum-n" min="0" max="100" value="0" style="width:40px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:1px 3px;font-size:10px">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+              <span style="width:14px;color:var(--text-dim)">#</span>
+              <input type="text" id="cp-hex-inline" maxlength="6" value="000000" style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 4px;font-size:11px;font-family:monospace">
+            </div>
+          </div>
+          <!-- Swatches -->
+          <div id="swatches-grid" style="display:flex;flex-wrap:wrap;gap:2px;margin-top:6px"></div>
+        </div>
+      </div>
+
+      <!-- Layers -->
+      <div class="panel" id="layers-panel" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div class="panel-header">
+          Layers
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding:0">
+          <div class="layers-controls">
+            <label style="font-size:10px">Mode:</label>
+            <select id="layer-blend-mode" style="font-size:10px;max-width:90px"></select>
+            <label style="font-size:10px;margin-left:4px">Opacity:</label>
+            <input type="range" id="layer-opacity" min="0" max="100" value="100" style="width:50px;accent-color:var(--accent)">
+            <input type="number" id="layer-opacity-num" value="100" min="0" max="100" style="width:36px;font-size:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:1px 2px">
+            <span style="font-size:10px">%</span>
+          </div>
+          <div id="layers-list" style="flex:1;overflow-y:auto;padding:2px"></div>
+          <div class="layers-footer">
+            <button id="layer-add" title="New Layer">＋</button>
+            <button id="layer-duplicate" title="Duplicate Layer">⎘</button>
+            <button id="layer-merge-down" title="Merge Down">⊟</button>
+            <button id="layer-group" title="Group Layers">📁</button>
+            <button id="layer-delete" title="Delete Layer" style="margin-left:auto">🗑</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Channels -->
+      <div class="panel" id="channels-panel" style="display:none">
+        <div class="panel-header">Channels <span class="panel-toggle">▼</span></div>
+        <div class="panel-body" id="channels-list">
+          <div class="channel-item"><span class="channel-color" style="background:#aaa"></span> RGB <span style="margin-left:auto;color:var(--text-dim)">Ctrl+~</span></div>
+          <div class="channel-item"><span class="channel-color" style="background:#f66"></span> Red <span style="margin-left:auto;color:var(--text-dim)">Ctrl+1</span></div>
+          <div class="channel-item"><span class="channel-color" style="background:#6f6"></span> Green <span style="margin-left:auto;color:var(--text-dim)">Ctrl+2</span></div>
+          <div class="channel-item"><span class="channel-color" style="background:#66f"></span> Blue <span style="margin-left:auto;color:var(--text-dim)">Ctrl+3</span></div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="panel" id="history-panel">
+        <div class="panel-header">
+          History
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <div id="history-list"></div>
+        </div>
+      </div>
+
+      <!-- Navigator -->
+      <div class="panel" id="navigator-panel" style="display:none">
+        <div class="panel-header">Navigator <span class="panel-toggle">▼</span></div>
+        <div class="panel-body">
+          <div id="navigator-thumb"></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <button onclick="app.setZoom(app.scale/1.25)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);cursor:pointer;padding:2px 6px;font-size:11px">−</button>
+            <input type="range" id="zoom-slider" min="5" max="3200" value="100" style="flex:1;accent-color:var(--accent)" oninput="app.setZoom(this.value/100)">
+            <button onclick="app.setZoom(app.scale*1.25)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);cursor:pointer;padding:2px 6px;font-size:11px">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="panel" id="info-panel" style="display:none">
+        <div class="panel-header">Info <span class="panel-toggle">▼</span></div>
+        <div class="panel-body">
+          <div class="info-row"><span class="info-label">R:</span><span class="info-value" id="info-r">—</span></div>
+          <div class="info-row"><span class="info-label">G:</span><span class="info-value" id="info-g">—</span></div>
+          <div class="info-row"><span class="info-label">B:</span><span class="info-value" id="info-b">—</span></div>
+          <div class="info-row"><span class="info-label">A:</span><span class="info-value" id="info-a">—</span></div>
+          <div class="menu-sep" style="margin:6px 0"></div>
+          <div class="info-row"><span class="info-label">X:</span><span class="info-value" id="info-x">—</span></div>
+          <div class="info-row"><span class="info-label">Y:</span><span class="info-value" id="info-y">—</span></div>
+          <div class="menu-sep" style="margin:6px 0"></div>
+          <div class="info-row"><span class="info-label">W:</span><span class="info-value" id="info-w">—</span></div>
+          <div class="info-row"><span class="info-label">H:</span><span class="info-value" id="info-h">—</span></div>
+        </div>
+      </div>
+
+      <!-- Brushes -->
+      <div class="panel" id="brushes-panel" style="display:none">
+        <div class="panel-header">Brushes <span class="panel-toggle">▼</span></div>
+        <div class="panel-body" id="brush-presets-list"></div>
+      </div>
+
+      <!-- Paths -->
+      <div class="panel" id="paths-panel" style="display:none">
+        <div class="panel-header">Paths <span class="panel-toggle">▼</span></div>
+        <div class="panel-body"><p style="font-size:11px;color:var(--text-dim)">No paths.</p></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="panel" id="actions-panel" style="display:none">
+        <div class="panel-header">Actions <span class="panel-toggle">▼</span></div>
+        <div class="panel-body"><p style="font-size:11px;color:var(--text-dim)">No actions recorded.</p></div>
+      </div>
+
+      <!-- Character -->
+      <div class="panel" id="character-panel" style="display:none">
+        <div class="panel-header">Character <span class="panel-toggle">▼</span></div>
+        <div class="panel-body" style="font-size:11px;display:flex;flex-direction:column;gap:6px">
+          <label>Font: <select id="char-font" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:11px">
+            <option>Arial</option><option>Helvetica</option><option>Times New Roman</option><option>Courier New</option><option>Georgia</option><option>Verdana</option><option>Impact</option>
+          </select></label>
+          <label>Size: <input type="number" id="char-size" value="24" min="1" max="1000" style="width:60px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 4px;font-size:11px"> px</label>
+          <label>Leading: <input type="text" id="char-leading" value="auto" style="width:60px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 4px;font-size:11px"> px</label>
+          <label>Tracking: <input type="number" id="char-tracking" value="0" style="width:60px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 4px;font-size:11px"></label>
+          <label>Color: <input type="color" id="char-color" value="#000000" style="width:40px;height:22px"></label>
+          <div style="display:flex;gap:4px;margin-top:2px">
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 8px;cursor:pointer"><b>B</b></button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 8px;cursor:pointer"><i>I</i></button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 8px;cursor:pointer"><u>U</u></button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px 8px;cursor:pointer"><s>S</s></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swatches -->
+      <div class="panel" id="swatches-panel" style="display:none">
+        <div class="panel-header">Swatches <span class="panel-toggle">▼</span></div>
+        <div class="panel-body" id="swatches-list" style="display:flex;flex-wrap:wrap;gap:2px"></div>
+      </div>
+
+      <!-- Paragraph -->
+      <div class="panel" id="paragraph-panel" style="display:none">
+        <div class="panel-header">Paragraph <span class="panel-toggle">▼</span></div>
+        <div class="panel-body" style="font-size:11px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:4px">
+            <button style="background:var(--accent);border:1px solid var(--accent);color:#fff;padding:3px 8px;cursor:pointer;font-size:11px">⬛◀▶</button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 8px;cursor:pointer;font-size:11px">⬛▶◀</button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 8px;cursor:pointer;font-size:11px">⬛▶</button>
+            <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 8px;cursor:pointer;font-size:11px">⬛⬛</button>
+          </div>
+          <label>Indent Left: <input type="number" value="0" style="width:50px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px;font-size:11px"> pt</label>
+          <label>Indent Right: <input type="number" value="0" style="width:50px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px;font-size:11px"> pt</label>
+          <label>Space Before: <input type="number" value="0" style="width:50px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px;font-size:11px"> pt</label>
+          <label>Space After: <input type="number" value="0" style="width:50px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:2px;font-size:11px"> pt</label>
+          <label><input type="checkbox"> Hyphenation</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Status Bar ────────────────────────────────────────────────────── -->
+  <div id="status-bar">
+    <span id="doc-info" style="flex-shrink:0">800 × 600 px | RGB</span>
+    <span style="color:var(--border)">|</span>
+    <select title="Status info">
+      <option>Document Sizes</option>
+      <option>Document Profile</option>
+      <option>Document Dimensions</option>
+      <option>Scratch Sizes</option>
+      <option>Efficiency</option>
+      <option>Timing</option>
+      <option>Current Tool</option>
+    </select>
+    <span style="flex:1"></span>
+    <span id="pixel-info" style="font-family:monospace;font-size:10px"></span>
+    <span style="color:var(--border)">|</span>
+    <span id="coord-display" style="font-family:monospace;font-size:10px;min-width:100px"></span>
+    <span style="color:var(--border)">|</span>
+    <button onclick="app.setZoom(app.scale/1.25)" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:14px;padding:0 2px">−</button>
+    <input type="range" id="zoom-slider" min="5" max="3200" value="100" style="width:70px;accent-color:var(--accent)" oninput="app&&app.setZoom(this.value/100)">
+    <button onclick="app.setZoom(app.scale*1.25)" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:14px;padding:0 2px">+</button>
+    <span id="zoom-display" style="min-width:42px;text-align:right;cursor:pointer;font-size:11px" onclick="app.setZoom(1)">100%</span>
+  </div>
+
+</div><!-- #app -->
+
+<!-- Scripts -->
+<script src="js/history.js"></script>
+<script src="js/layers.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/adjustments.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/keyboard.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+// Extra UI wiring after app initialises
+window.addEventListener('DOMContentLoaded', () => {
+  // Panel toggle collapse
+  document.querySelectorAll('.panel-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling;
+      if (!body) return;
+      const hidden = body.style.display === 'none';
+      body.style.display = hidden ? '' : 'none';
+      header.querySelector('.panel-toggle').textContent = hidden ? '▼' : '▶';
+    });
+  });
+
+  // Bind color panel inline color picker
+  const syncColor = () => {
+    if (!window.app) return;
+    const h = parseInt(document.getElementById('cp-hue').value)||0;
+    const s = parseInt(document.getElementById('cp-sat').value)||0;
+    const l = parseInt(document.getElementById('cp-lum').value)||0;
+    const hsl2hex = (h,s,l) => {
+      s/=100; l/=100;
+      const a=s*Math.min(l,1-l);
+      const f=n=>{const k=(n+h/30)%12;const color=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*color).toString(16).padStart(2,'0');};
+      return '#'+f(0)+f(8)+f(4);
+    };
+    const hex = hsl2hex(h,s,l);
+    document.getElementById('cp-hex-inline').value = hex.replace('#','');
+    document.getElementById('cp-fg-preview').style.background = hex;
+    document.getElementById('color-picker-native').value = hex;
+    app.setFgColor(hex);
+    const fg = document.getElementById('fg-color-swatch'); if(fg) fg.style.background=hex;
+    const cpFg = document.getElementById('cp-fg-preview'); if(cpFg) cpFg.style.background=hex;
+  };
+  ['cp-hue','cp-sat','cp-lum'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.addEventListener('input', syncColor); }
+  });
+  ['cp-hue-n','cp-sat-n','cp-lum-n'].forEach((id,i) => {
+    const rangeId = ['cp-hue','cp-sat','cp-lum'][i];
+    const num = document.getElementById(id), range = document.getElementById(rangeId);
+    if (num && range) {
+      num.addEventListener('input', () => { range.value=num.value; syncColor(); });
+      range.addEventListener('input', () => { num.value=range.value; });
+    }
+  });
+  const hexInline = document.getElementById('cp-hex-inline');
+  if (hexInline) {
+    hexInline.addEventListener('input', () => {
+      const hex = '#' + hexInline.value;
+      if (hexInline.value.length === 6) { app && app.setFgColor(hex); document.getElementById('color-picker-native').value=hex; }
+    });
+  }
+
+  // Build default swatches (Photoshop default palette)
+  const SWATCHES = [
+    '#ff0000','#ff7f00','#ffff00','#7fff00','#00ff00','#00ff7f',
+    '#00ffff','#007fff','#0000ff','#7f00ff','#ff00ff','#ff007f',
+    '#ffffff','#d0d0d0','#a0a0a0','#707070','#404040','#000000',
+    '#ff9999','#ffcc99','#ffff99','#ccff99','#99ffcc','#99ffff',
+    '#99ccff','#cc99ff','#ff99ff','#ff99cc','#cc6666','#cc9966',
+    '#cccc66','#99cc66','#66cc99','#66cccc','#6699cc','#9966cc',
+    '#cc66cc','#cc6699','#993333','#996633','#999933','#669933',
+    '#339966','#339999','#336699','#663399','#993399','#993366',
+    '#663300','#996600','#666600','#336600','#006633','#006666',
+    '#003366','#330066','#660066','#660033',
+  ];
+  const sg = document.getElementById('swatches-grid');
+  const sl = document.getElementById('swatches-list');
+  [sg, sl].forEach(container => {
+    if (!container) return;
+    SWATCHES.forEach(color => {
+      const el = document.createElement('div');
+      el.className = 'swatch-item';
+      el.style.background = color;
+      el.title = color;
+      el.addEventListener('click', e => { if(window.app){ if(e.altKey) app.setBgColor(color); else app.setFgColor(color); } });
+      container.appendChild(el);
+    });
+  });
+
+  // Build brush presets
+  const bpl = document.getElementById('brush-presets-list');
+  if (bpl) {
+    const presets = [
+      {name:'Soft Round',size:20,softness:80},
+      {name:'Hard Round',size:20,softness:0},
+      {name:'Soft Round 5px',size:5,softness:80},
+      {name:'Hard Round 5px',size:5,softness:0},
+      {name:'Soft Round 9px',size:9,softness:80},
+      {name:'Soft Round 13px',size:13,softness:80},
+      {name:'Soft Round 19px',size:19,softness:80},
+      {name:'Hard Round 9px',size:9,softness:0},
+      {name:'Hard Round 13px',size:13,softness:0},
+      {name:'Hard Round 19px',size:19,softness:0},
+    ];
+    presets.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'brush-preset';
+      el.title = p.name;
+      const c = document.createElement('canvas');
+      c.width=36; c.height=36;
+      const ctx=c.getContext('2d');
+      const r=Math.min(p.size/2,16);
+      if(p.softness>0){
+        const g=ctx.createRadialGradient(18,18,0,18,18,r);
+        g.addColorStop(0,'#fff');
+        g.addColorStop(p.softness/100,'#fff');
+        g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;
+      } else {
+        ctx.fillStyle='#fff';
+      }
+      ctx.beginPath(); ctx.arc(18,18,r,0,Math.PI*2); ctx.fill();
+      el.appendChild(c);
+      el.addEventListener('click', () => {
+        if(!window.app) return;
+        app.brushOptions.size=p.size;
+        app.brushOptions.softness=p.softness;
+        app.ui.updateBrushSizeDisplay();
+        document.querySelectorAll('.brush-preset').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+      });
+      bpl.appendChild(el);
+    });
+  }
+
+  // Layer opacity sync
+  const lopNum = document.getElementById('layer-opacity-num');
+  const lopRange = document.getElementById('layer-opacity');
+  if (lopNum && lopRange) {
+    lopRange.addEventListener('input', () => lopNum.value = lopRange.value);
+    lopNum.addEventListener('input', () => lopRange.value = lopNum.value);
+  }
+
+  // Update doc info in status bar when layers change
+  setInterval(() => {
+    if (!window.app) return;
+    const el = document.getElementById('doc-info');
+    if (el) el.textContent = `${app.layers.width} × ${app.layers.height} px | RGB`;
+    const zd = document.getElementById('zoom-display');
+    if (zd) zd.textContent = `${Math.round(app.scale*100)}%`;
+    const zs = document.getElementById('zoom-slider');
+    if (zs) zs.value = Math.round(app.scale*100);
+  }, 500);
+});
+</script>
+</body>
+</html>
