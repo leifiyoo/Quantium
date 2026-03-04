@@ -49,34 +49,34 @@ class KeyboardManager {
     if (ctrl && !shift && e.key === 'n') { e.preventDefault(); this.app.ui.showNewDocDialog(); return; }
     if (ctrl && !shift && e.key === 'o') { e.preventDefault(); this.app.ui.openFile(); return; }
     if (ctrl && !shift && e.key === 's') { e.preventDefault(); this.app.ui.saveFile(); return; }
-    if (ctrl && shift && e.key === 'S') { e.preventDefault(); this.app.ui.saveFileAs(); return; }
-    if (ctrl && shift && e.key === 'E') { e.preventDefault(); this.app.ui.exportFlattened(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 's') { e.preventDefault(); this.app.ui.saveFileAs(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'e') { e.preventDefault(); this.app.ui.exportFlattened(); return; }
     if (ctrl && e.key === 'w') { e.preventDefault(); this.app.ui.closeDocument(); return; }
     if (ctrl && e.key === 'p') { e.preventDefault(); this.app.ui.print(); return; }
 
     // ── Edit ─────────────────────────────────────────────────────────────
     if (ctrl && !shift && e.key === 'z') { e.preventDefault(); this.app.undo(); return; }
-    if (ctrl && shift && e.key === 'Z') { e.preventDefault(); this.app.redo(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'z') { e.preventDefault(); this.app.redo(); return; }
     if (ctrl && e.key === 'y') { e.preventDefault(); this.app.redo(); return; }
     if (ctrl && !shift && e.key === 'x') { e.preventDefault(); this.app.cut(); return; }
     if (ctrl && !shift && e.key === 'c') { e.preventDefault(); this.app.copy(); return; }
     if (ctrl && !shift && e.key === 'v') { e.preventDefault(); this.app.paste(); return; }
-    if (ctrl && shift && e.key === 'V') { e.preventDefault(); this.app.pasteInPlace(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'v') { e.preventDefault(); this.app.pasteInPlace(); return; }
     if (ctrl && !shift && e.key === 'd') { e.preventDefault(); this.app.selection.deselect(); this.app.renderOverlay(); return; }
-    if (ctrl && shift && e.key === 'D') { e.preventDefault(); this.app.selection.reselect(); this.app.renderOverlay(); return; }
-    if (ctrl && shift && e.key === 'I') { e.preventDefault(); this.app.selection.invert(this.app.layers.width,this.app.layers.height); this.app.renderOverlay(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'd') { e.preventDefault(); this.app.selection.reselect(); this.app.renderOverlay(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'i') { e.preventDefault(); this.app.selection.invert(this.app.layers.width,this.app.layers.height); this.app.renderOverlay(); return; }
     if (ctrl && e.key === 'a') { e.preventDefault(); this.app.selection.selectAll(this.app.layers.width,this.app.layers.height); this.app.renderOverlay(); return; }
     if (ctrl && !shift && e.key === 't') { e.preventDefault(); this.app.activateTool('transform'); return; }
-    if (ctrl && shift && e.key === 'T') { e.preventDefault(); this.app.repeatTransform(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 't') { e.preventDefault(); this.app.repeatTransform(); return; }
     if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); this.app.deleteSelection(); return; }
     if (ctrl && e.key === 'f') { e.preventDefault(); this.app.repeatLastFilter(); return; }
 
     // ── Layer ─────────────────────────────────────────────────────────────
-    if (ctrl && shift && e.key === 'N') { e.preventDefault(); this.app.layers.addLayer(); this.app.ui.refreshLayers(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'n') { e.preventDefault(); this.app.layers.addLayer(); this.app.ui.refreshLayers(); return; }
     if (ctrl && e.key === 'j') { e.preventDefault(); this.app.copyLayerViaSelection(); return; }
-    if (ctrl && shift && e.key === 'J') { e.preventDefault(); this.app.cutLayerViaSelection(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'j') { e.preventDefault(); this.app.cutLayerViaSelection(); return; }
     if (ctrl && e.key === 'e') { e.preventDefault(); this.app.layers.mergeDown(this.app.layers.activeLayerId); this.app.history.snapshot('Merge Down',this.app.layers); this.app.ui.refreshLayers(); this.app.render(); return; }
-    if (ctrl && shift && e.key === 'E') { e.preventDefault(); this.app.layers.mergeAll(); this.app.history.snapshot('Merge All',this.app.layers); this.app.ui.refreshLayers(); this.app.render(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'e') { e.preventDefault(); this.app.layers.mergeAll(); this.app.history.snapshot('Merge All',this.app.layers); this.app.ui.refreshLayers(); this.app.render(); return; }
     if (ctrl && alt && e.key === 'e') { e.preventDefault(); this.app.layers.mergeAll(); this.app.ui.refreshLayers(); this.app.render(); return; }
     if (ctrl && e.key === 'g') { e.preventDefault(); this.app.ui.groupLayers(); return; }
     if (alt && e.key === '[') { e.preventDefault(); this.app.selectLayerRelative(-1); return; }
@@ -87,16 +87,16 @@ class KeyboardManager {
     if (ctrl && e.key === '-') { e.preventDefault(); this.app.setZoom(this.app.scale/1.25); return; }
     if (ctrl && e.key === '0') { e.preventDefault(); this.app.fitToScreen(); return; }
     if (ctrl && alt && e.key === '0') { e.preventDefault(); this.app.setZoom(1); return; }
-    if (e.key === 'F') { e.preventDefault(); this.app.toggleFullscreen(); return; }
+    if (shift && e.key.toLowerCase() === 'f') { e.preventDefault(); this.app.toggleFullscreen(); return; }
     if (ctrl && e.key === 'r') { e.preventDefault(); this.app.ui.toggleRulers(); return; }
     if (ctrl && e.key === "'") { e.preventDefault(); this.app.ui.toggleGrid(); return; }
     if (ctrl && e.key === ';') { e.preventDefault(); this.app.ui.toggleGuides(); return; }
-    if (ctrl && shift && e.key === 'H') { e.preventDefault(); this.app.ui.toggleExtras(); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'h') { e.preventDefault(); this.app.ui.toggleExtras(); return; }
     if (e.key === 'Tab') { e.preventDefault(); this.app.ui.togglePanels(); return; }
 
     // ── Image ─────────────────────────────────────────────────────────────
-    if (ctrl && shift && e.key === 'L') { e.preventDefault(); this.app.applyAdjustment('autoLevels'); return; }
-    if (ctrl && shift && e.key === 'U') { e.preventDefault(); this.app.applyAdjustment('desaturate'); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'l') { e.preventDefault(); this.app.applyAdjustment('autoLevels'); return; }
+    if (ctrl && shift && e.key.toLowerCase() === 'u') { e.preventDefault(); this.app.applyAdjustment('desaturate'); return; }
     if (ctrl && e.key === 'i') { e.preventDefault(); this.app.applyAdjustment('invert'); return; }
     if (ctrl && e.key === 'l') { e.preventDefault(); this.app.ui.showAdjustmentDialog('levels'); return; }
     if (ctrl && e.key === 'm') { e.preventDefault(); this.app.ui.showAdjustmentDialog('curves'); return; }
